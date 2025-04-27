@@ -5,7 +5,6 @@ namespace App\Domain\Entity;
 use App\Domain\ValueObject\Description;
 use App\Domain\ValueObject\Title;
 use App\Domain\ValueObject\UUID;
-use App\Infrastructure\Observers\BookObserver;
 
 class Book
 {
