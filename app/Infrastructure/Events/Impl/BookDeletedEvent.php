@@ -7,6 +7,8 @@ use App\Infrastructure\Events\Listener;
 
 class BookDeletedEvent implements Listener
 {
+    private static self $instance;
+
 
     /**
      * @param Book $data
@@ -14,5 +16,14 @@ class BookDeletedEvent implements Listener
     public function execute(mixed $data): void
     {
         echo "Book {$data->getId()} deletado!\n";
+    }
+
+    public static function getInstance(): self
+    {
+        if(!isset(self::$instance)) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
     }
 }

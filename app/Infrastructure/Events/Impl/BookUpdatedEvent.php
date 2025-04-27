@@ -7,11 +7,22 @@ use App\Infrastructure\Events\Listener;
 
 class BookUpdatedEvent implements Listener
 {
+    private static self $instance;
+
     /**
      * @param Book $data
      */
     public function execute(mixed $data): void
     {
         echo "Book {$data->getId()} atualizado!\n";
+    }
+
+    public static function getInstance(): self
+    {
+        if(!isset(self::$instance)) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Infrastructure\Events;
 
+use RuntimeException;
+
 class EventManager
 {
     private array $listeners = [];
@@ -29,11 +31,17 @@ class EventManager
     {
         if (isset($this->listeners[$eventType])) {
             foreach ($this->listeners[$eventType] as $listenerClass) {
-                $listener = new $listenerClass();
-
-                if (method_exists($listener, 'execute')) {
-                    $listener->execute($data);
+                if(!method_exists($listenerClass, 'getInstance')) {
+                    throw new RuntimeException("Listener class $listenerClass must have a getInstance method.");
                 }
+
+                $listener = $listenerClass::getInstance();
+
+                if (!method_exists($listener, 'execute')) {
+                    throw new RuntimeException("Listener class $listenerClass must have execute method.");
+                }
+
+                $listener->execute($data);
             }
         }
     }
