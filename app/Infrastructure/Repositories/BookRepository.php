@@ -4,12 +4,12 @@ namespace App\Infrastructure\Repositories;
 
 use App\Application\DTOs\CreateBookDTO;
 use App\Application\DTOs\UpdateBookDTO;
+use App\Application\Interfaces\Events\EventManagerInterface;
 use App\Application\Interfaces\Repositories\BookRepositoryInterface;
 use App\Domain\Entity\Book;
 use App\Domain\ValueObject\Description;
 use App\Domain\ValueObject\Title;
 use App\Domain\ValueObject\UUID;
-use App\Infrastructure\Events\EventManager;
 use App\Infrastructure\Events\Impl\BookCreatedEvent;
 use App\Infrastructure\Events\Impl\BookDeletedEvent;
 use App\Infrastructure\Events\Impl\BookUpdatedEvent;
@@ -18,11 +18,15 @@ use Random\RandomException;
 
 readonly class BookRepository implements BookRepositoryInterface
 {
-    public function __construct(private EventManager $eventManager)
-    {
-        $this->eventManager->subscribe('book.created', BookCreatedEvent::class);
-        $this->eventManager->subscribe('book.updated', BookUpdatedEvent::class);
-        $this->eventManager->subscribe('book.deleted', BookDeletedEvent::class);
+    public function __construct(
+        private EventManagerInterface $eventManager,
+        private BookCreatedEvent $bookCreatedEvent,
+        private BookUpdatedEvent $bookUpdatedEvent,
+        private BookDeletedEvent $bookDeletedEvent
+    ) {
+        $this->eventManager->subscribe('book.created', $this->bookCreatedEvent);
+        $this->eventManager->subscribe('book.updated', $this->bookUpdatedEvent);
+        $this->eventManager->subscribe('book.deleted', $this->bookDeletedEvent);
     }
 
     /**
@@ -63,7 +67,7 @@ readonly class BookRepository implements BookRepositoryInterface
                 new Description($book->description),
                 $book->author_name
             );
-        });
+        })->toArray();
     }
 
     public function getById(string $id): Book

@@ -3,26 +3,15 @@
 namespace App\Infrastructure\Events\Impl;
 
 use App\Domain\Entity\Book;
-use App\Infrastructure\Events\Listener;
+use App\Application\Interfaces\Events\EventListenerInterface;
 
-class BookUpdatedEvent implements Listener
+class BookUpdatedEvent implements EventListenerInterface
 {
-    private static self $instance;
-
     /**
      * @param Book $data
      */
     public function execute(mixed $data): void
     {
         echo "Book {$data->getId()} atualizado!\n";
-    }
-
-    public static function getInstance(): self
-    {
-        if(!isset(self::$instance)) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
     }
 }
