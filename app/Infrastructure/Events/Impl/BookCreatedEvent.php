@@ -2,13 +2,17 @@
 
 namespace App\Infrastructure\Events\Impl;
 
+use App\Domain\Entity\Book;
 use App\Infrastructure\Events\Listener;
 
 class BookCreatedEvent implements Listener
 {
 
+    /**
+     * @param Book $data
+     */
     public function execute(mixed $data): void
     {
-        echo "Book $data->id criado!\n";
+        echo "Book {$data->getId()} criado!\n";
     }
 }

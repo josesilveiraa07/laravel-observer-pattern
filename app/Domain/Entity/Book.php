@@ -9,6 +9,7 @@ use App\Domain\ValueObject\UUID;
 class Book
 {
     public function __construct(
+        // Ajusta versão e variant
         protected UUID $id,
         protected Title $title,
         protected Description $description,
